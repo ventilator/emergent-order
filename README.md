@@ -28,9 +28,9 @@ This repository contains the following subdirectories:
 
 - **`showrunner/`** - Node.js service that runs on the Raspberry Pi, manages animation playback, streams LED data to the Pico firmware via USB serial, and provides WebSocket interface.
 
-- **`animations/`** - JavaScript animation scripts that generate LED patterns using 3D math (SDF primitives, planes, spheres, fire effects, etc.).
+- **`animations/`** - JavaScript animation scripts that generate LED patterns using 3D math (SDF primitives, planes, spheres, fire effects, etc.). See [animations/README.md](animations/README.md) for examples and animation format.
 
-- **`animation_designer/`** - Web-based tool for designing and previewing animations before deploying them to the cube.
+- **`animation_designer/`** - Web-based tool for designing and previewing animations before deploying them to the cube. See [animation_designer/README.md](animation_designer/README.md) for usage instructions.
 
 ### Calibration & Utilities
 
