@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED Detector</title>
+    <link rel="stylesheet" href="led_detector.css">
+</head>
+<body>
+    <!-- Fullscreen canvas container -->
+    <div class="viewport" id="viewport">
+        <div class="canvas-wrapper" id="canvasWrapper">
+            <canvas id="canvas"></canvas>
+            <div id="overlayContainer" class="overlay-container"></div>
+        </div>
+    </div>
+
+    <!-- Crosshair for rectangle mask drawing -->
+    <div id="crosshairH" class="crosshair-line horizontal"></div>
+    <div id="crosshairV" class="crosshair-line vertical"></div>
+
+    <!-- Floating control panels -->
+    <div class="panel floating-panel" id="uploadPanel" style="top: 20px; left: 20px;">
+        <div class="panel-header">
+            <span class="panel-title">Upload</span>
+            <button class="panel-toggle" onclick="togglePanel('uploadPanel')">_</button>
+        </div>
+        <div class="panel-content">
+            <div class="drop-zone" id="dropZone">
+                <p>Drop images anywhere or click</p>
+                <input type="file" id="fileInput" multiple accept="image/*">
+            </div>
+            <div id="fileList" class="file-list" style="display: none;"></div>
+            <button id="unloadBtn" style="margin-top: 10px; display: none;">Unload All</button>
+        </div>
+    </div>
+
+    <div class="panel floating-panel" id="controlsPanel" style="top: 20px; right: 20px;">
+        <div class="panel-header">
+            <span class="panel-title">Controls</span>
+            <button class="panel-toggle" onclick="togglePanel('controlsPanel')">_</button>
+        </div>
+        <div class="panel-content">
+            <div class="control-group">
+                <label>Ternary Digits</label>
+                <input type="number" id="numDigits" value="9" min="1" max="20">
+            </div>
+            <div class="control-group">
+                <label>Min Pixels/LED</label>
+                <div class="slider-container">
+                    <input type="range" id="minPixels" min="1" max="64" step="1" value="16">
+                    <span class="value-display" id="minPixelsValue">16</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Brightness Threshold</label>
+                <div class="slider-container">
+                    <input type="range" id="brightnessThreshold" min="0" max="255" step="1" value="50">
+                    <span class="value-display" id="brightnessValue">50</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Color Purity</label>
+                <div class="slider-container">
+                    <input type="range" id="colorPurity" min="1" max="5" step="0.1" value="2.0">
+                    <span class="value-display" id="purityValue">2.0</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Pre-Blur Radius</label>
+                <div class="slider-container">
+                    <input type="range" id="blurRadius" min="0" max="3" step="0.1" value="1.0">
+                    <span class="value-display" id="blurValue">1.0</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Green Correction</label>
+                <div class="slider-container">
+                    <input type="range" id="greenCorrection" min="1.0" max="3.0" step="0.1" value="1.5">
+                    <span class="value-display" id="greenCorrectionValue">1.5</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Dark Frame</label>
+                <div class="slider-container">
+                    <input type="range" id="darkFrameContribution" min="-1" max="1" step="0.1" value="-1" disabled>
+                    <span class="value-display" id="darkFrameValue">-1.0</span>
+                </div>
+                <div class="info-text" id="darkFrameInfo">No dark frame</div>
+            </div>
+            <div class="control-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="applyMask" checked>
+                    <label for="applyMask">Mask Frame</label>
+                </div>
+                <div class="info-text" id="maskFrameInfo">No mask frame</div>
+            </div>
+            <div class="control-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="enableRectMask">
+                    <label for="enableRectMask">Rectangle Mask</label>
+                </div>
+                <button id="clearRectBtn" style="margin-top: 6px;" disabled>Clear Rectangle</button>
+                <div class="info-text" id="rectMaskInfo">Click and drag to draw</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel floating-panel" id="viewPanel" style="bottom: 20px; left: 20px;">
+        <div class="panel-header">
+            <span class="panel-title">View</span>
+            <button class="panel-toggle" onclick="togglePanel('viewPanel')">_</button>
+        </div>
+        <div class="panel-content">
+            <div class="control-group">
+                <label>Frame</label>
+                <div id="frameButtons" class="frame-buttons"></div>
+            </div>
+            <div class="control-group">
+                <label>Mode</label>
+                <div id="modeButtons" class="mode-buttons">
+                    <button class="mode-btn active" data-mode="normal" title="Normal - Original image [N]">🖼️</button>
+                    <button class="mode-btn" data-mode="classified" title="Classified - Color detected [C]">🎨</button>
+                    <button class="mode-btn" data-mode="red" title="Red Channel (thresholded) [R]">🔴</button>
+                    <button class="mode-btn" data-mode="green" title="Green Channel (thresholded) [G]">🟢</button>
+                    <button class="mode-btn" data-mode="blue" title="Blue Channel (thresholded) [B]">🔵</button>
+                    <button class="mode-btn" data-mode="idmap" title="LED ID Map - Unique colors per LED [I]">🗺️</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="showOverlay">
+                    <label for="showOverlay" title="Toggle LED Overlay [O]">Show LED Overlay</label>
+                </div>
+            </div>
+            <div class="control-group">
+                <button id="resetViewBtn" title="Reset Zoom and Pan [Z]">Reset View</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel floating-panel" id="resultsPanel" style="bottom: 20px; right: 20px;">
+        <div class="panel-header">
+            <span class="panel-title">Results</span>
+            <button class="panel-toggle" onclick="togglePanel('resultsPanel')">_</button>
+        </div>
+        <div class="panel-content">
+            <div class="stats" id="stats" style="display: none;"></div>
+            <div class="spinner" id="spinner" style="display: none;">
+                <div class="spinner-circle"></div>
+                <span>Computing...</span>
+            </div>
+            <div class="button-group">
+                <button id="copyBtn" disabled title="Copy results to clipboard">📋</button>
+                <button id="downloadBtn" disabled title="Download results as text file">💾</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="led_detector.js"></script>
+    <script>
+        // Panel dragging functionality
+        const panels = document.querySelectorAll('.floating-panel');
+
+        panels.forEach(panel => {
+            const header = panel.querySelector('.panel-header');
+            let isDragging = false;
+            let currentX, currentY, initialX, initialY;
+
+            header.addEventListener('mousedown', (e) => {
+                if (e.target.classList.contains('panel-toggle')) return;
+                isDragging = true;
+                initialX = e.clientX - panel.offsetLeft;
+                initialY = e.clientY - panel.offsetTop;
+                panel.style.cursor = 'grabbing';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                panel.style.left = currentX + 'px';
+                panel.style.top = currentY + 'px';
+                panel.style.right = 'auto';
+                panel.style.bottom = 'auto';
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                panel.style.cursor = 'grab';
+            });
+        });
+
+        function togglePanel(panelId) {
+            const panel = document.getElementById(panelId);
+            const content = panel.querySelector('.panel-content');
+            const toggle = panel.querySelector('.panel-toggle');
+
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '_';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '+';
+            }
+        }
+    </script>
+</body>
+</html>
