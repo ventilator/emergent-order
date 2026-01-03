@@ -51,9 +51,13 @@ mpremote connect /dev/ttyACM0
 
 For the animations to look correct, the exact 3D position of each LED must be known:
 
-1. Press the boot button on the ESP32 to cycle animations and bring up the calibration pattern (TODO: not yet implemented in firmware)
-2. Capture calibration images/videos of the cube from different perspectives
-3. Process the data and generate a LED calibration text file using the tools in `../../calibration/`
+1. Press the boot button on the ESP32 to cycle to the **Calibration** animation
+   - The calibration pattern displays a ternary-encoded LED ID sequence with magenta sync markers
+   - Compatible with the camera-based calibration tools in `../../calibration/`
+2. Capture calibration videos of the cube from multiple perspectives (6+ angles recommended)
+   - Use fixed camera settings (exposure, white balance, focus)
+   - Record the full calibration sequence from each angle
+3. Process the videos and generate LED position data using the tools in `../../calibration/`
 4. Upload the LED calibration results (positions) as `solution1.txt` to the ESP32:
    ```bash
    mpremote connect /dev/ttyACM0 cp solution1.txt :
@@ -81,6 +85,7 @@ The firmware includes a simple animation framework:
 Example animations included:
 - **`plane_animation.py`** Animated plane sweeping through the cube
 - **`sphere_animation.py`** Pulsing sphere effect
+- **`calibration.py`** Ternary-encoded calibration pattern for camera-based position recovery
 
 ## License
 

@@ -264,19 +264,19 @@ def decode_led_id(color_sequence: str) -> int:
     return true_id
 
 def generate_calibration_pattern(led_id: int, num_digits: int = 9) -> str:
-    """Generate looping calibration pattern: M_C_C_..._C_ (M=magenta, _=dark, C=color)"""
+    """Generate looping calibration pattern: _M_C_C_..._C_ (M=magenta, _=dark, C=color)"""
     # Encode the LED ID to get color sequence
     color_sequence = encode_led_id(led_id, num_digits)
 
-    # Build the pattern: start with magenta marker
-    pattern = ['M', '_']
+    # Build the pattern: start with dark frame, then magenta marker
+    pattern = ['_', 'M', '_']
 
     # Add each color frame followed by a dark frame
     for color in color_sequence:
         pattern.append(color)
         pattern.append('_')
 
-    # Pattern loops back to magenta marker (no explicit end marker needed)
+    # Pattern loops back to initial dark frame (no explicit end marker needed)
     return ''.join(pattern)
 ```
 
@@ -289,8 +289,9 @@ For LED ID `1` with 9 digits:
 - Decode check: `14 // 9 = 1` ✓ (recovers original ID)
 - Ternary representation: `14 = 112` in base 3 (LSB first: 2, 1, 1)
 - Color sequence: `BGGRRRRRR` (padded to 9 digits, R=0, G=1, B=2)
-- Full calibration pattern: `M_B_G_G_R_R_R_R_R_R_` (20 frames, then loops)
-  - Frame 1: Magenta (start marker)
+- Full calibration pattern: `_M_B_G_G_R_R_R_R_R_R_` (21 frames, then loops)
+  - Frame 0: Dark (initial black frame)
+  - Frame 1: Magenta (sync marker)
   - Frame 2: Dark
   - Frame 3: Blue (digit 0 = 2)
   - Frame 4: Dark
@@ -299,7 +300,7 @@ For LED ID `1` with 9 digits:
   - ... (continues for all 9 color frames with dark frames between)
   - Frame 19: Red (digit 8 = 0)
   - Frame 20: Dark
-  - (Pattern loops back to frame 1 - next magenta serves as sequence boundary)
+  - (Pattern loops back to frame 0)
 
 ## License
 

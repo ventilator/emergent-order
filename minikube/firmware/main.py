@@ -9,6 +9,7 @@ import config
 from coordinate_loader import load_coordinates
 from animations.sphere_animation import SphereAnimation
 from animations.plane_animation import PlaneAnimation
+from animations.calibration import CalibrationAnimation
 
 
 def clear_all(np):
@@ -52,6 +53,7 @@ def main():
     animations = [
         ("Plane", PlaneAnimation),
         ("Sphere", SphereAnimation),
+        ("Calibration", CalibrationAnimation),
     ]
 
     print("Available animations:")
