@@ -18,9 +18,9 @@ This repository contains the following subdirectories:
 
 ### Hardware & Electronics
 
-- **`controller_pcb/`** - KiCad project for the custom controller PCB that interfaces the Raspberry Pi 4 with the Raspberry Pi Pico and provides power distribution for the LED strings.
+- **`controller_pcb/`** - KiCad project for a high-performance 8-channel WS2812 controller based on the Raspberry Pi Pico. Features include USB streaming mode, standalone operation with built-in test patterns, SD card playback, comprehensive monitoring (voltage, current, temperature), and per-channel smart fuse protection (3.7A). Supports up to 200 LEDs per channel at 60Hz. See [controller_pcb/README.md](controller_pcb/README.md) for complete specifications.
 
-- **`pico_firmware/`** - C firmware for the Raspberry Pi Pico that drives 8 independent WS2812B channels via PIO hardware. Features gamma correction, automatic current limiting, hardware monitoring (temperature, current, voltage), channel fault detection, and built-in test patterns. Supports up to 200 LEDs per channel at 60Hz. See [pico_firmware/README.md](pico_firmware/README.md) for protocol specification and development setup.
+- **`pico_firmware/`** - C firmware for the Raspberry Pi Pico that drives 8 independent WS2812B channels via PIO hardware. Features gamma correction, automatic current limiting, hardware monitoring (temperature, current, voltage), channel fault detection, and built-in test patterns including a ternary-encoded calibration pattern for camera-based position recovery. See [pico_firmware/README.md](pico_firmware/README.md) for protocol specification and development setup.
 
 - **`mechanical/`** - 3D printable parts (base, corners, combs, controller mounts) and carbon fiber tube specifications for building the physical cube structure. See [mechanical/README.md](mechanical/README.md) for details.
 
@@ -49,10 +49,10 @@ This repository contains the following subdirectories:
 - **Physical size:** 1×1×1 meter cube
 - **LEDs:** 1200 individually addressable WS2812B LEDs
 - **Structure:** Carbon fiber tubes (20×18mm) with 3D printed corner connectors
-- **Controller:** Raspberry Pi 4 + Raspberry Pi Pico
-- **Power:** Custom PCB with power distribution for LED strings
-- **Software:** Node.js showrunner + JavaScript animation framework
-- **Communication:** USB serial (Pi 4 → Pico), PIO-based WS2812B output, WebSocket interface for live animation streaming
+- **Controller:** Raspberry Pi Pico-based 8-channel controller (can be driven by Raspberry Pi 3 or run standalone)
+- **Power:** Custom 4-layer PCB with 8-channel power distribution, smart fuse protection (3.7A per channel), and comprehensive monitoring
+- **Software:** Node.js showrunner + JavaScript animation framework (USB streaming), or standalone test patterns
+- **Communication:** USB serial (Pi 3 → Pico), PIO-based WS2812B output, WebSocket interface for live animation streaming
 
 ## Development Approach
 
