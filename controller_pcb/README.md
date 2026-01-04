@@ -10,7 +10,7 @@ High-performance WS2812 LED controller based on the Raspberry Pi Pico, designed 
 - **Multiple operation modes:**
   - USB streaming mode (real-time control from computer)
   - Standalone mode (run animations directly on Pico)
-  - SD card playback mode (pre-recorded animations)
+  - SD card playback mode (hardware ready, firmware not yet implemented)
 - **Built-in test patterns** for calibration and diagnostics
 - **Comprehensive monitoring** - voltage, current, and temperature sensing
 - **Advanced protection** - smart fuses, PTC, and TVS diodes
@@ -47,6 +47,23 @@ High-performance WS2812 LED controller based on the Raspberry Pi Pico, designed 
 
 ### Storage
 - **SD card slot** for storing animations and configuration files
+- **Note:** SD card support is not currently implemented in the firmware, but it was verified that the slot is correctly wired and the Pico can access data on an SD card
+
+## Implementation & Assembly Notes
+
+### Capacitors
+- The layout contains space for through-hole capacitors on the input rail and on each output rail
+- These were not fitted on the controller that ran the installation and can be considered optional
+
+### Channel Output Connectors
+- The pin headers on the channel outputs do fit into JST-SM plugs commonly used with LED strings
+- However, the spacing of the pin headers is too tight for two JST-SM plugs next to each other
+- There is no mechanical interlocking, and if you pass any decent current (over 1A) these connections will get quite warm, especially if not well inserted
+- **Recommendation:** For the controller used in the installation, we soldered pigtails with JST-SM sockets directly to the controller PCB for more reliable connections
+
+### Pico Mounting
+- The Pi Pico was mounted with a socket to allow easier exchange in case of failure
+- This is recommended over direct soldering for serviceability
 
 ## Firmware
 
