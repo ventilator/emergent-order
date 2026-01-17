@@ -18,6 +18,8 @@ MicroPython firmware to drive the LEDs of the minikube (single WS2812 string) wi
 4. **Power the ESP32:**
    - Connect ESP32 via USB
 
+   - Especially during development, while the ESP is connected to the USB port, it can happen that the PC does not deliver the required 500mA+ of power. On the console one can observe messages like "brown out detected, rebooting". If this is the case, consider powering the LED strip externally by connecting the 5V line of the LED strip to an external power supply. Do not forget to connect GND
+
 ## Installation Instructions
 
 ### 1. Flash MicroPython
@@ -37,6 +39,11 @@ Upload all files from this directory to the ESP32 using [mpremote](https://docs.
 
 ```bash
 mpremote connect /dev/ttyACM0 cp -r * :
+```
+
+Windows (with com3 as the com port of your device):
+```cmd
+py -m mpremote connect com3 cp -r *
 ```
 
 ### 4. Verify Operation
