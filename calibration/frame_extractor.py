@@ -10,7 +10,7 @@ from collections import deque
 BRIGHTNESS_THRESHOLD_PERCENT = 0.06  # 25% threshold for edge detection
 ROLLING_AVERAGE_FRAMES = 5  # Number of frames to use for rolling average
 SEQUENCE_LENGTH = 9  # Number of frames between magenta markers
-MAGENTA_THRESHOLD_MULTIPLIER = 1.20  # Magenta threshold as multiplier of average (1.5 = 50% above average)
+MAGENTA_THRESHOLD_MULTIPLIER = 1.10  # Magenta threshold as multiplier of average (1.5 = 50% above average)
 SUB_SEQUENCES = 1  # Number of sub-sequences to divide the main sequence into
 SKIP_FIRST_FRAME_IN_SEQUENCE = False
 RED_INSTEAD_OF_MAGENTA = False

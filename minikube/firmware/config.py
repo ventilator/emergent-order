@@ -9,7 +9,7 @@ LED_PIN = 13             # WS2812 data line
 EXTERNAL_START = 0       # Offset for external cube LEDs in strip (skips built-in LEDs)
 
 # Brightness Configuration
-BRIGHTNESS = 255          # Power-saving brightness (0-255)
+BRIGHTNESS = 30          # Power-saving brightness (0-255)
                         # Low brightness reduces USB power bank load
 
 # Timing Configuration

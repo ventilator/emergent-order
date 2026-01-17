@@ -485,7 +485,8 @@ def generate_3d_visualization(led_ids: List[str], pts3d: np.ndarray,
 </body>
 </html>"""
 
-    with open(output_path, 'w') as f:
+    print(output_path)
+    with open(output_path, 'w', encoding="utf-8") as f:
         f.write(html_content)
 
 def generate_multi_camera_visualization(led_ids: List[str], led_3d_coords: Dict[str, np.ndarray], 
@@ -1095,7 +1096,7 @@ def generate_multi_camera_visualization(led_ids: List[str], led_3d_coords: Dict[
 </body>
 </html>"""
 
-    with open(output_path, 'w') as f:
+    with open(output_path, 'w', encoding="utf-8") as f:
         f.write(html_content)
 
 def rodrigues_to_mat(rvec):
