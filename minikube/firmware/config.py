@@ -2,11 +2,11 @@
 # Based on testdevice.py configuration adapted for 74-LED cube
 
 # GPIO Configuration
-BUTTON_PIN = 9           # Boot button (active low with pull-up)
-LED_PIN = 20             # WS2812 data line
+BUTTON_PIN = 0           # Boot button (active low with pull-up)
+LED_PIN = 13             # WS2812 data line
 
 # LED Strip Configuration
-EXTERNAL_START = 4       # Offset for external cube LEDs in strip (skips built-in LEDs)
+EXTERNAL_START = 0       # Offset for external cube LEDs in strip (skips built-in LEDs)
 
 # Brightness Configuration
 BRIGHTNESS = 255          # Power-saving brightness (0-255)
